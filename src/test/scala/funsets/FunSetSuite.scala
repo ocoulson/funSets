@@ -81,6 +81,7 @@ class FunSetSuite extends FunSuite {
     val zeroSet = singletonSet(0)
 
     val emptySet: Set = x => false
+    val allIntegers: Set = x => true
     val allPositiveIntegers: Set = _ > 0
     val allEvenIntegers: Set = _ % 2 == 0
     val allOddIntegers: Set = _ % 2 != 0
@@ -190,5 +191,39 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("Forall determines whether all elements of a set conform to a predicate") {
+    new TestSets {
+      assert(forall(allPositiveIntegers, _ > 0))
+
+      assert(!forall(allPositiveIntegers, x => x - 900 < 0))
+
+      assert(forall(allIntegers, x => x - x == 0))
+
+      assert(!forall(allNegativeIntegers, x => x % 501 != 0))
+
+    }
+  }
+
+  test("Exists returns true if at least 1 bounded integer in the given set conforms to the predicate") {
+    new TestSets {
+      assert(exists(allIntegers, _ == 10))
+      assert(exists(allIntegers, _ > 900))
+
+      assert(!exists(allNegativeIntegers, _ == 10))
+      assert(!exists(allIntegers, x => x < x - 5))
+
+    }
+  }
+
+  test("Map") {
+    new TestSets {
+
+      printSet(s1)
+      printSet(map(s1, x => 1))
+
+      printSet(allPositiveEvenIntegers)
+      printSet(map(allPositiveIntegers, _ + 1))
+    }
+  }
 
 }
