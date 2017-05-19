@@ -77,26 +77,38 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+
+    val zeroSet = singletonSet(0)
+
+    val emptySet: Set = x => false
+    val allPositiveIntegers: Set = _ > 0
+    val allEvenIntegers: Set = _ % 2 == 0
+    val allOddIntegers: Set = _ % 2 != 0
+    val allNegativeIntegers: Set = _ < 0
+
+    val allPositiveEvenIntegers = intersect(allEvenIntegers, allPositiveIntegers)
+
+    val allIntegersGreaterThan10: Set = _ > 10
   }
 
   /**
-   * This test is currently disabled (by using "ignore") because the method
-   * "singletonSet" is not yet implemented and the test would fail.
-   *
-   * Once you finish your implementation of "singletonSet", exchange the
-   * function "ignore" by "test".
-   */
+    * This test is currently disabled (by using "ignore") because the method
+    * "singletonSet" is not yet implemented and the test would fail.
+    *
+    * Once you finish your implementation of "singletonSet", exchange the
+    * function "ignore" by "test".
+    */
   test("singletonSet(1) contains 1") {
 
     /**
-     * We create a new instance of the "TestSets" trait, this gives us access
-     * to the values "s1" to "s3".
-     */
+      * We create a new instance of the "TestSets" trait, this gives us access
+      * to the values "s1" to "s3".
+      */
     new TestSets {
       /**
-       * The string argument of "assert" is a message that is printed in case
-       * the test fails. This helps identifying which assertion failed.
-       */
+        * The string argument of "assert" is a message that is printed in case
+        * the test fails. This helps identifying which assertion failed.
+        */
       assert(contains(s1, 1), "Singleton")
     }
   }
@@ -107,6 +119,74 @@ class FunSetSuite extends FunSuite {
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+    }
+  }
+
+  test("intersect contains only elements in both sets") {
+    new TestSets {
+      val i = intersect(allEvenIntegers, allPositiveIntegers)
+      assert(contains(i, 2))
+      assert(contains(i, 4))
+      assert(contains(i, 200))
+      assert(contains(i, 12321232))
+
+      assert(!contains(i, 1))
+      assert(!contains(i, 45))
+      assert(!contains(i, 125))
+
+      assert(!contains(i, -2))
+      assert(!contains(i, -40))
+      assert(!contains(i, -1))
+      assert(!contains(i, -5))
+      assert(!contains(i, -101))
+    }
+  }
+
+  test("difference contains only those elements of the first set which are not in the second") {
+    new TestSets {
+      val d = diff(allPositiveEvenIntegers, allIntegersGreaterThan10)
+
+      assert(contains(d,2))
+      assert(contains(d,4))
+      assert(contains(d,6))
+      assert(contains(d,8))
+      assert(contains(d, 10))
+
+      assert(!contains(d, 12))
+      assert(!contains(d, 14))
+      assert(!contains(d, 16))
+
+      assert(!contains(d, 1))
+      assert(!contains(d, 5))
+      assert(!contains(d, 55))
+
+      assert(!contains(d, -1))
+      assert(!contains(d, -2))
+      assert(!contains(d, -10))
+    }
+  }
+
+  test("filter only contains elements in the set which are accepted by the predicate") {
+    new TestSets {
+      val f = filter(allPositiveIntegers, _ < 5)
+
+      assert(contains(f, 1))
+      assert(contains(f, 2))
+      assert(contains(f, 3))
+      assert(contains(f, 4))
+
+      assert(!contains(f, 0))
+      assert(!contains(f, 5))
+      assert(!contains(f, 6))
+      assert(!contains(f, 20))
+      assert(!contains(f, 100))
+
+      assert(!contains(f, -1))
+      assert(!contains(f, -50))
+      assert(!contains(f, -2))
+      assert(!contains(f, -3))
+      assert(!contains(f, -4))
+
     }
   }
 
